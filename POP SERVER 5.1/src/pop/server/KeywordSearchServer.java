@@ -28,6 +28,7 @@ public class KeywordSearchServer {
         MainDomain.serverCollector.add(this);
         ConnectorThread ct = new ConnectorThread();
         ct.start();
+        newForum = false;
     }
 
     public synchronized void setForum(boolean bool) {
@@ -89,20 +90,24 @@ public class KeywordSearchServer {
             while (true) {
                 lock.lock();
                 try {
-                    //if(!clientListener.messageM.isEmpty())
-                    //textAr.setText(clientListener.messageM);
-                    textAr.setText(messageLogger.castMessage);
-                    //communicator.receivedM.contains("create")
-                    if (messageLogger.castMessage.contains("create")) {
+                    //textAr.setText(messageLogger.castMessage);
+                    if (!communicator.receivedM.equals("")) {
+                        textAr.setText(communicator.receivedM);
+                    }
+
+                    //messageLogger.castMessage.contains("create");
+                    if (communicator.receivedM.contains("create")) {
                         setForum(true);
                         temp = communicator.receivedM;
+                        communicator.receivedM = "";
                     } else {
-                        setForum(false);
+                        //setForum(false);
                     }
                 } catch (Exception e) {
                     //e.printStackTrace();
                 } finally {
-                    messageLogger.castMessage = "";
+                    //messageLogger.castMessage = "";
+                    
                     lock.unlock();
                 }
 
